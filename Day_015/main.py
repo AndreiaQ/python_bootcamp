@@ -7,7 +7,7 @@ while choice != "off":
     resources = {
         "water": 30,
         "milk": 200,
-        "coffee": 100,
+        "coffee": 10,
         "money": 0
     }
     if choice == "report":
@@ -21,8 +21,11 @@ while choice != "off":
         break
     if choice == "espresso":
         espresso_ingredients = drink["espresso"]["ingredients"]
-        if list(resources.values()) < list(espresso_ingredients.values()):
-            print(f"“Sorry there is not enough {resources.keys()}.")
+        common_ingredients = resources.keys() & espresso_ingredients.keys()
+        for ingredient in common_ingredients:
+            if resources[ingredient] < espresso_ingredients[ingredient]:
+                print(f"Sorry there is not enough {ingredient}.")
+        break
 
     break
 
