@@ -33,8 +33,24 @@ while machine_working:
     elif choice in MENU:
         check_resources_sufficient(choice)
         print("Please insert coins:")
+        quarter = int(input("How may quarters?"))
+        dimes = int(input("How may dimes?"))
+        nickles = int(input("How may nickles?"))
+        pennies = int(input("How may pennies?"))
 
+        value_inserted = quarter*0.25 + dimes*0.1 + nickles*0.05 + pennies*0.01
+
+        if value_inserted < MENU[choice]["cost"]:
+            print("Sorry that's not enough money. Money refunded.")
+        else:
+            resources["money"] += MENU[choice]["cost"]
+            change = value_inserted-MENU[choice]["cost"]
+            print(f"Here is ${change:.2f} dollars in change")
+            common_ingredients = MENU[choice]["ingredients"] & resources.keys()
+            for ingredients in common_ingredients:
+                resources[ingredients] -= MENU[choice]["ingredients"][ingredients]
+            print(f"Here is your {choice}. Enjoy!”")
     elif choice == "off":
         machine_working = False
-        print("Bye !")
+        print("Shutting down coffee machine...")
 
