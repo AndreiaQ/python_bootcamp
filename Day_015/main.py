@@ -19,9 +19,9 @@ def print_report():
 def check_resources_sufficient(drink):
     choice_ingredients = MENU[drink]["ingredients"]
     matching_ingredients = choice_ingredients & resources.keys()
-    for items in matching_ingredients:
-        if resources[items] < choice_ingredients[items]:
-            print(f"Sorry there is not enough {items}")
+    for ingredients in matching_ingredients:
+        if resources[ingredients] < choice_ingredients[ingredients]:
+            print(f"Sorry there is not enough {ingredients}")
             return False
     return True
 
@@ -36,18 +36,23 @@ def calculate_value_inserted():
 
     return value_inserted
 
-machine_working = True
+def deduct_ingredients(drink):
+    common_ingredients = MENU[drink]["ingredients"] & resources.keys()
+    for ingredients in common_ingredients:
+        resources[ingredients] -= MENU[drink]["ingredients"][ingredients]
+    print(f"Here is your {choice}. Enjoy!")
 
-while machine_working:
+machine_on = True
+
+while machine_on:
     choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
     if choice == "report":
        print_report()
     elif choice in MENU:
         if not check_resources_sufficient(choice):
             print("Shutting down the coffee machine due to insufficient resources.")
-            machine_working = False
+            machine_on = False
             continue
-
         value = calculate_value_inserted()
         if value < MENU[choice]["cost"]:
             print("Sorry that's not enough money. Money refunded.")
@@ -55,11 +60,11 @@ while machine_working:
             resources["money"] += MENU[choice]["cost"]
             change = value - MENU[choice]["cost"]
             print(f"Here is ${change:.2f} dollars in change")
-            common_ingredients = MENU[choice]["ingredients"] & resources.keys()
-            for ingredients in common_ingredients:
-                resources[ingredients] -= MENU[choice]["ingredients"][ingredients]
-            print(f"Here is your {choice}. Enjoy!")
+            deduct_ingredients(choice)
+
+    elif choice not in MENU:
+        print("Drink not available on our menu, please select another drink.")
     elif choice == "off":
-        machine_working = False
+        machine_on = False
         print("Shutting down coffee machine...")
 
