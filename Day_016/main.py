@@ -1,4 +1,4 @@
-from menu import Menu, MenuItem
+from menu import Menu
 from coffee_maker import CoffeeMaker
 from money_machine import MoneyMachine
 
@@ -9,7 +9,8 @@ money_machine = MoneyMachine()
 machine_on = True
 
 while machine_on:
-    choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
+    options = menu.get_items()
+    choice = input(f"What would you like? ({options}): ").lower()
     if choice == "off":
         machine_on = False
         print("Shutting down coffee machine...")
@@ -19,13 +20,8 @@ while machine_on:
     else:
         drink = menu.find_drink(choice)
         if drink:
-            if not coffee_maker.is_resource_sufficient(drink):
-                continue
-            if not money_machine.make_payment(drink.cost):
-                continue
-            coffee_maker.make_coffee(drink)
-        else:
-            print("Sorry we dont have that drink :(")
+            if coffee_maker.is_resource_sufficient(drink) and money_machine.make_payment(drink.cost):
+                coffee_maker.make_coffee(drink)
 
 
 
