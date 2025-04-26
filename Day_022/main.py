@@ -1,33 +1,35 @@
-from turtle import Screen, Turtle
+from turtle import Screen
+from paddle import Paddle
+from ball import Ball
+import time
 
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(800,600)
 screen.title("Pong Game")
-paddle = Turtle()
+screen.tracer(0)
 
 
-def move_up():
-    y = paddle.ycor()
-    paddle.sety(y + 20)
+paddle_r = Paddle((350,0))
+paddle_l = Paddle((-350,0))
+ball = Ball()
 
-
-def move_down():
-    y = paddle.ycor()
-    paddle.sety(y - 20)
-
-paddle.color("white")
-paddle.shape("square")
-paddle.shapesize(5,1,1)
-paddle.penup()
-paddle.goto(350,0)
 screen.listen()
-screen.onkey(move_up,"Up")
-screen.onkey(move_down,"Down")
+screen.onkey(paddle_r.move_up, "Up")
+screen.onkey(paddle_r.move_down, "Down")
+screen.onkey(paddle_l.move_up, "w")
+screen.onkey(paddle_l.move_down, "s")
 
 
 
+game_is_on = True
+while game_is_on:
+    time.sleep(0.05)
+    screen.update()
+    ball.move()
 
+    if ball.ycor() > 280 or ball.ycor() < -280:
+        ball.bounce()
 
 
 screen.exitonclick()
